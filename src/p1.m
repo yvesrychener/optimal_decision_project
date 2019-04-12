@@ -10,19 +10,19 @@ close all
 
 P = [1/2, 1/3, 1/6];
 Q = [2/5, 3/5];
-loc_s = ...;
-loc_d = ...;
+loc_s = [1, 2, 3];
+loc_d = [1, 2];
 %% Compute cost function
-dist = pdist2(loc_s, loc_d, '...');
+dist = pdist2(loc_s', loc_d', 'squaredeuclidean');
 
 %% Optimization problem
 % decision variables
-trans_map = sdpvar(..., ..., 'full');      
+trans_map = sdpvar(size(P,2), size(Q,2), 'full');      
 % constraints
-con = [];
+con = [trans_map>=0, sum(trans_map,2)==P', sum(trans_map,1)==Q];
 
 % objective
-obj = ...
+obj = sum(sum(dist.*trans_map));
 
 % solution
 ops = sdpsettings('solver','gurobi','verbose',0);
