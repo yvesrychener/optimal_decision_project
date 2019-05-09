@@ -19,23 +19,31 @@ K = length(train(1,:));
 N = length(train(:,1));
 
 %% Decision Variables
-...
-
+x = sdpvar(K,1);
+l = sdpvar(1);
+m = sdpvar(N,1);
+j = sdpvar(N,1);
+P = 1/N*ones(N,1);
 %% Objective
-obj = ...;
+obj = -l*rho-m'*P;
 
 %% Constraints
-con = [];
-...
+c = pdist2(train, train, 'squaredeuclidean');
+
+con = [l>=0,sum(x)==1,l*c+ones(N,1)*j'+m*ones(N,1)'>=0,x>=0];
+for i = 1:N
+    con = [con, j(i)<=a1*train(i,:)*x+b1,j(i)<=a2*train(i,:)*x+b2];
+end
     
 %% Optimization Settings
 ops = sdpsettings('solver','Gurobi','verbose',0);
-diag = optimize(con,...,ops);
+diag = optimize(con,-obj,ops);
 
 %% Retrieve portfolio weights 
-... = value(...);
-    
+x = value(x);
 %% Evaluate portfolio
-y_test = mean(...);
+u1 = a1*test*x+b1;
+u2 = a2*test*x+b2;
+y = mean(min(u1,u2));
 
 end
