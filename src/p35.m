@@ -12,22 +12,22 @@ rng(0);
 
 %% Specify training and testing samples
 % testing set
-load test
+load '../data/test.mat';
 % training set
-N = ...;           % number of independent training datasets
+N = 1000;  % number of independent training datasets
 N_train = 30;       % number of training samples in each set
 
 %% Declare results and set Wasserstein radius
 saa = zeros(N,1);
 dro = zeros(N,1);
-rho = ...;          % Wasserstein radius
+rho = 0.9;          % Wasserstein radius
 %% Compute optimal utility when knowing all testing samples
-pi = ...;
+pi = p33(test, test); % FIXME (what is pi supposed to hold for a value?)
 %% Loop over all training datasets
 for n = 1:N
     train = sample_data(N_train);       % draw a new training dataset
-    saa(n) = ...;
-    dro(n) = ...;
+    saa(n) = p33(train, test);
+    dro(n) = p34(train, test, rho);
     fprintf('Progress %0.2f\n',n/N)
 end
 %% Save results
@@ -55,7 +55,7 @@ ylabel('Probability')
 legend('Location','northwest')
 
 % Save the figure under the name 'fname'
-fname = ...;
+fname = 'fname';
 saveas(gcf, fname);
 
 hold off
