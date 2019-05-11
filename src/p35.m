@@ -59,3 +59,18 @@ fname = 'fname';
 saveas(gcf, fname);
 
 hold off
+
+%% Plot the normalized pdf
+figure;
+h1 = histogram(saa/pi, 20, 'DisplayName','SAA');
+hold on;
+h2 = histogram(dro/pi, 20, 'DisplayName','DRO');
+h1.Normalization = 'probability';
+h2.Normalization = 'probability';
+h1.BinWidth = 0.01;
+h2.BinWidth = 0.01;
+legend('boxoff')
+grid on
+xlabel('Normalized out-of-sample utility')
+ylabel('Probability (density)')
+legend('Location','northwest')
